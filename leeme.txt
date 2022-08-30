@@ -1,3 +1,3 @@
 Buenas profe si lee esto, para que pueda ir a una version de esta app en un browser vaya a 
-https://trabajo-memorias.vercel.app/
+https://trabajo-entrada-salida.vercel.app/
 Todo el codigo es igual al que ve en esta carpeta.

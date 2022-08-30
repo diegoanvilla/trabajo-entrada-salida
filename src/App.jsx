@@ -19,7 +19,6 @@ function App() {
             <a onClick={() => setEstrategia(false)}>Salida</a>
             <a onClick={() => setEstrategia(true)}>Entrada</a>
           </div>
-          <small>Memoria es de 8mb</small>
           {estrategia ? <FragmentacionExterna /> : <FragmentacionInterna />}
         </div>
         <div className="input-section">

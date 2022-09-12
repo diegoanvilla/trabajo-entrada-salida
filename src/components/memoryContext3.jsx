@@ -43,6 +43,7 @@ function MemoryContext({ children }) {
   const [espacio, setEspacio] = useState(initialArray);
   const [procesos, setProcesos] = useState([]);
   const [cpuInterval, setCpuInterval] = useState(null);
+  const [pausedInterval, setPausedInterval] = useState();
 
   const savedCallback = useRef();
 
@@ -56,50 +57,58 @@ function MemoryContext({ children }) {
   };
 
   const interval = () => {
-    if (procesos.length) {
-      try {
-        setCpuProcess(
-          procesos[0].dispositivo,
-          procesos[0].estrategia === "Interrupcion"
-        );
-        let espacioArray = espacio;
-        espacioArray[procesos[0].slot] = {
-          dispositivo: procesos[0].dispositivo,
-          velocidad: procesos[0].velocidad,
-          estrategia: procesos[0].estrategia,
-          listo: true,
-        };
-        let processes = procesos;
-        processes.shift();
-        setProcesos(processes);
-        console.log(procesos.length);
-        setEspacio(espacioArray);
-      } catch (err) {
-        console.log(err);
+    if (!pausedInterval) {
+      if (procesos.length) {
+        try {
+          setCpuProcess(procesos[0].dispositivo);
+          let espacioArray = espacio;
+          espacioArray[procesos[0].slot] = {
+            dispositivo: procesos[0].dispositivo,
+            velocidad: procesos[0].velocidad,
+            estrategia: procesos[0].estrategia,
+            listo: true,
+          };
+          let processes = procesos;
+          processes.shift();
+          setProcesos(processes);
+          setEspacio(espacioArray);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        setCpu({
+          trabajando: false,
+          progress: 0,
+          title: ``,
+          interrupted: "",
+        });
       }
     } else {
-      setCpu({
-        trabajando: false,
-        progress: 0,
-        title: ``,
-        interrupted: "",
-      });
+      setCpuProcess(pausedInterval.dispositivo, true);
+      let espacioArray = espacio;
+      espacioArray[pausedInterval.slot] = {
+        dispositivo: pausedInterval.dispositivo,
+        velocidad: pausedInterval.velocidad,
+        estrategia: pausedInterval.estrategia,
+        listo: true,
+      };
+      setEspacio(espacioArray);
+
+      setPausedInterval();
     }
   };
 
   const getFreeSpacePosition = () => {
     for (let index = 0; index < espacio.length; index++) {
       if (espacio[index].reservado === false) {
-        console.log(index);
         return index;
       }
     }
-    return undefined;
   };
 
   const addDispositivo = (dispositivo) => {
     const slot = getFreeSpacePosition();
-    if (slot === undefined) return alert("No hay espacios disponibles");
+
     const espacioArray = espacio;
     espacioArray[slot] = {
       dispositivo: "conectando...",
@@ -108,12 +117,7 @@ function MemoryContext({ children }) {
     setEspacio((e) => [...espacioArray]);
     setTimeout(() => {
       let p = procesos;
-      if (dispositivo.estrategia === "Interrupcion") {
-        console.log(procesos.length);
-      }
-      dispositivo.estrategia === "Interrupcion"
-        ? p.unshift({ ...dispositivo, listo: false, slot: slot })
-        : p.push({ ...dispositivo, listo: false, slot: slot });
+      p.push({ ...dispositivo, listo: false, slot: slot });
       setProcesos((process) => [...p]);
     }, dispositivo.tiempo * 100);
   };
@@ -136,6 +140,18 @@ function MemoryContext({ children }) {
     };
     return app;
   }, []);
+
+  useEffect(() => {
+    if (
+      procesos.length &&
+      procesos[procesos.length - 1].estrategia === "Interrupcion"
+    ) {
+      setPausedInterval(procesos[procesos.length - 1]);
+      let processes = procesos;
+      processes.pop();
+      setProcesos((p) => [...processes]);
+    }
+  }, [procesos]);
 
   return (
     <MemoriaContext.Provider

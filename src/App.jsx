@@ -3,6 +3,8 @@ import "./styles/styles.css";
 import FragmentacionInterna from "./components/Salida";
 import FragmentacionExterna from "./components/Entrada";
 import DiagramaMemoria from "./components/DiagramaMemoria";
+import Cpu from "./components/cpu";
+import Procesos from "./components/procesos";
 import { useMemoria } from "./components/memoryContext";
 function App() {
   const { initialize } = useMemoria();
@@ -22,6 +24,9 @@ function App() {
           {estrategia ? <FragmentacionExterna /> : <FragmentacionInterna />}
         </div>
         <div className="input-section">
+          <Procesos></Procesos>
+          <h1>CPU</h1>
+          <Cpu></Cpu>
           <h1>Conectados</h1>
           <DiagramaMemoria></DiagramaMemoria>
         </div>

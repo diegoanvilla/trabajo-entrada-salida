@@ -46,6 +46,15 @@ body {
 input {
   width: 100%;
 }
+.cpu {
+  position: relative;
+  width: 100%;
+  border-radius: 5px;
+  background-color: #f3f3f3;
+  padding: 20px;
+  text-align: center;
+  overflow: hidden;
+}
 .memoria-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -68,10 +77,24 @@ input {
   top: -1px;
   bottom: 0;
   left: 0;
-  background-color: rgb(117, 230, 247);
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.loader {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgb(117, 230, 247);
+  z-index: 0;
+}
+.proceso > h3,
+p,
+small {
+  text-align: center;
+  z-index: 1;
 }
 .titulo {
   text-align: center;

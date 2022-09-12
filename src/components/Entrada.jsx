@@ -2,13 +2,24 @@ import React, { useRef, useEffect, useState } from "react";
 import { useMemoria } from "./memoryContext";
 function FragmentacionExterna() {
   const entrada = [
-    { dispositivo: "Teclado", velocidad: "10 Bps", estrategia: "programada" },
+    {
+      dispositivo: "Teclado",
+      velocidad: "10 Bps",
+      estrategia: "programada",
+      tiempo: 13,
+    },
     {
       dispositivo: "Mouse",
       velocidad: "1Bps - 1Kbs",
       estrategia: "programada",
+      tiempo: 7,
     },
-    { dispositivo: "microfono", velocidad: "64Kbs", estrategia: "programada" },
+    {
+      dispositivo: "Microfono",
+      velocidad: "64Kbs",
+      estrategia: "programada",
+      tiempo: 30,
+    },
   ];
   const { espacio, setEspacio, addDispositivo } = useMemoria();
   return (
